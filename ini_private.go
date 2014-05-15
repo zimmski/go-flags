@@ -172,10 +172,10 @@ func readIniFromFile(filename string) (ini, error) {
 
 	defer file.Close()
 
-	return readIni(file, filename)
+	return readIni(file)
 }
 
-func readIni(contents io.Reader, filename string) (ini, error) {
+func readIni(contents io.Reader) (ini, error) {
 	ret := make(ini)
 
 	reader := bufio.NewReader(contents)
@@ -211,7 +211,6 @@ func readIni(contents io.Reader, filename string) (ini, error) {
 			if line[0] != '[' || line[len(line)-1] != ']' {
 				return nil, &IniError{
 					Message:    "malformed section header",
-					File:       filename,
 					LineNumber: lineno,
 				}
 			}
@@ -221,7 +220,6 @@ func readIni(contents io.Reader, filename string) (ini, error) {
 			if len(name) == 0 {
 				return nil, &IniError{
 					Message:    "empty section name",
-					File:       filename,
 					LineNumber: lineno,
 				}
 			}
@@ -243,7 +241,6 @@ func readIni(contents io.Reader, filename string) (ini, error) {
 		if len(keyval) != 2 {
 			return nil, &IniError{
 				Message:    fmt.Sprintf("malformed key=value (%s)", line),
-				File:       filename,
 				LineNumber: lineno,
 			}
 		}

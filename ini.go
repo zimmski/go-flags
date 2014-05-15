@@ -12,17 +12,14 @@ type IniError struct {
 	// The error message.
 	Message string
 
-	// The filename of the file in which the error occurred.
-	File string
-
 	// The line number at which the error occurred.
 	LineNumber uint
 }
 
-// Error provides a "file:line: message" formatted message of the ini error.
+// Error provides a "line: message" formatted message of the ini error.
 func (x *IniError) Error() string {
-	return fmt.Sprintf("%s:%d: %s",
-		x.File,
+	return fmt.Sprintf(
+		"%d: %s",
 		x.LineNumber,
 		x.Message)
 }
@@ -115,7 +112,7 @@ func (i *IniParser) ParseFile(filename string) error {
 func (i *IniParser) Parse(reader io.Reader) error {
 	i.parser.storeDefaults()
 
-	ini, err := readIni(reader, "")
+	ini, err := readIni(reader)
 
 	if err != nil {
 		return err
